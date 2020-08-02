@@ -6,7 +6,7 @@
 
 # useful for handling different item types with a single interface
 import pymysql
-from maoyanproxy import settings
+from scrapy.utils.project import get_project_settings
 
 sqls = {
     'DELETE': "delete from `movie`", 
@@ -16,13 +16,14 @@ sqls = {
 
 class MaoyanproxyPipeline:
     def __init__(self):
+        settings = get_project_settings()
         self.conn = pymysql.connect(
-            host = settings.MYSQL_HOST,
-            port = settings.MYSQL_PORT,
-            user = settings.MYSQL_USER,
-            password = settings.MYSQL_PASSWORD,
-            db = settings.MYSQL_DB,
-            charset = settings.MYSQL_CHARSET)
+            host = settings.get('MYSQL_HOST'),
+            port = settings.get('MYSQL_PORT'),
+            user = settings.get('MYSQL_USER'),
+            password = settings.get('MYSQL_PASSWORD'),
+            db = settings.get('MYSQL_DB'),
+            charset = settings.get('MYSQL_CHARSET'))
         self.cur = self.conn.cursor()
         try:
             self.cur.execute(sqls['DELETE'])
