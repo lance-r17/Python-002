@@ -12,13 +12,6 @@ import time
 
 ip_validator = re.compile("^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$")
 
-def ips(start, end = None):
-    '''Return IPs in IPv4 range, inclusive.'''
-    start_int = int(ip_address(start).packed.hex(), 16)
-    end_int = int(ip_address(end).packed.hex(), 16) if end else start_int
-    start_int, end_int = [start_int, end_int] if start_int <= end_int else [end_int, start_int]
-    return [ip_address(ip).exploded for ip in range(start_int, end_int + 1)]
-
 def ip_scan(host):
     '''
     Return True if host (str) response to a ping request
@@ -77,11 +70,18 @@ class IpAction(argparse.Action):
                 print(f'invalid ip address: {ip}')
                 raise argparse.ArgumentTypeError('')
         
-        values = ips(*ip_list)
+        values = self.ips(*ip_list)
         
         # Save the results in the namespace using the destination
         # variable given to our constructor.
         setattr(namespace, self.dest, values)
+    
+    def ips(self, start, end = None):
+        '''Return IPs in IPv4 range, inclusive.'''
+        start_int = int(ip_address(start).packed.hex(), 16)
+        end_int = int(ip_address(end).packed.hex(), 16) if end else start_int
+        start_int, end_int = [start_int, end_int] if start_int <= end_int else [end_int, start_int]
+        return [ip_address(ip).exploded for ip in range(start_int, end_int + 1)]
 
 def parseargs():
     parser = argparse.ArgumentParser()
