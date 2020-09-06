@@ -1,0 +1,77 @@
+{% extends "base_layout.html" %} {% block title %}欢迎 - 豆瓣电影短评{% endblock %} 
+{% load static %}
+{% block head %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+{% endblock %} 
+{% block content %}
+    <h1>
+        <span property="v:itemreviewed">{{ film.name }}</span>
+        <span class="year">({{ film.year }})</span>
+    </h1>
+
+    <div class="article">
+        <div class="subjectwrap clearfix">
+            <div class="subject clearfix">
+                <div id="mainpic" class="">
+                    <img src={{ film.imageurl }} rel="v:image">
+                </div>
+                
+                <div id="info">
+                    <span>
+                        <span class="pl">导演</span>: <span class="attrs">{{ film.director }}</span></span><br>
+                        <span class="actor"><span class="pl">主演</span>: <span class="attrs"><span>{{ film.actors }}</span></span><br>
+                        <span class="pl">类型:</span> {{ film.categories }}<br>
+                        <span class="pl">语言:</span> {{ film.language}}<br>
+                        <span class="pl">IMDb链接:</span> <a href={{ film.imdburl }} target="_blank" rel="nofollow">{{ film.imdbname }}</a><br>
+        
+                </div>
+        
+            </div>
+        </div>
+    </div>
+
+    <div id="comments-section">
+        <div class="mod-hd">
+            <h2>
+                <i class="">{{ film.name }}的短评</i>
+                · · · · · ·
+            </h2>
+    
+    
+        </div>
+        <div class="mod-bd">
+    
+            <div class="tab-bd">
+                <div id="hot-comments" class="tab">
+    
+                    {% for comment in comments %}
+                    <div class="comment-item">
+                        <div class="comment">
+                            <h3>
+                                <span class="rating">评分: <span>{{comment.stars}}</span></span>
+                                <span class="comment-info">
+                                    <a href="#" class="">{{ comment.author }}</a>
+                                    <span class="comment-time">
+                                        {{ comment.commenttime}}
+                                    </span>
+                                </span>
+                            </h3>
+                            <p class="">
+                                <span class="short">{{comment.content}}</span>
+                            </p>
+                        </div>
+    
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+    
+    
+    
+    
+        </div>
+    </div>
+
+    
+{% endblock %}
